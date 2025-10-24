@@ -12,9 +12,18 @@ const App = () => {
       phoneNumber: '244-442-5521',
       id: 1
     },
-    { name: 'Ada Lovelace', phoneNumber: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', phoneNumber: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', phoneNumber: '39-23-6423122', id: 4 }
+    { name: 'Ada Lovelace', 
+      phoneNumber: '39-44-5323523', 
+      id: 2 
+    },
+    { name: 'Dan Abramov', 
+      phoneNumber: '12-43-234345', 
+      id: 3 
+    },
+    { name: 'Mary Poppendieck', 
+      phoneNumber: '39-23-6423122', 
+      id: 4 
+    }
   ])
   const [newName, setNewName] = useState('')
   const [newPhoneNumber, setNewPhoneNumber] = useState('')
@@ -49,19 +58,19 @@ const App = () => {
     }
   }
 
-  const handleSearch= (e) =>{
+  const handleSearch = (e) => {
     setSearchParam(e.target.value.toLowerCase());
-    
+
   }
-   
+
   return (
     <>
       <div>
         <h2>Phonebook</h2>
-        Search: <Filter search={handleSearch}/>
-        <AddPersonForm persons={addPersons} newName={newName} fullNameChange={handleNameChange} phoneNumber={newPhoneNumber} phoneNumberChange={handlePhoneNumberChange}/>
+        Search: <Filter search={handleSearch} />
+        <AddPersonForm persons={addPersons} newName={newName} fullNameChange={handleNameChange} phoneNumber={newPhoneNumber} phoneNumberChange={handlePhoneNumberChange} />
         <h1>Numbers</h1>
-        <PersonList persons={persons} search={searchParam}/>
+        <PersonList persons={persons} search={searchParam} />
         {/* <ul>
 
           {
