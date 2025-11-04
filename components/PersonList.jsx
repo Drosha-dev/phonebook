@@ -1,17 +1,23 @@
 
 
-const PersonList = ({persons, search}) => {
+const PersonList = ({ persons, search, handleRemove }) => {
 
 
-    return(
-        <ul>
+  return (
 
-          {
-            persons.filter(p => p.name.toLowerCase().includes(search) || search == '').map(p => <li key={p.id}>{p.name} {p.number}</li>)
-          }          
-          
-        </ul>
-    )
+    <ul>
+
+      {
+        persons.filter(p => p.name.toLowerCase().includes(search)
+          || search == '').map(p =>
+            <><li key={p.id}>{p.name} {p.phoneNumber}</li> 
+              <button onClick={() => handleRemove(p.id, p.name)}>PUSH ME</button></>)
+      }
+
+    </ul>
+
+
+  )
 }
 
 
