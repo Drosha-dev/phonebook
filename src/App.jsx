@@ -17,11 +17,13 @@ const App = () => {
     phoneService.getAll().then(initialPersons => {
       setPersons(initialPersons)
     })
-  }, [])
+  },[])
+
+  // not sure about these feel a bit outdated
   const handleNameChange = (e) => {
     setNewName(e.target.value);
   }
-
+//see handleNameChange
   const handlePhoneNumberChange = (e) => {
     setNewPhoneNumber(e.target.value);
   }
@@ -29,8 +31,9 @@ const App = () => {
   const addPersons = (e) => {
     e.preventDefault();
     
-    
-    const personFound = persons.find((e) => e.name == newName)
+    //finds person with same name
+    const personFound = persons.find((e) => e.name == newName);
+    // if found and user wants updates with new object through phoneservice update
     if (personFound !== undefined) {
       if(window.confirm(`${newName} has already been added. Do you want to update users Phone Number?`)){
         
@@ -40,12 +43,15 @@ const App = () => {
         phoneNumber: newPhoneNumber
         
        }
-         phoneService.update(personFound.id,updatededPersonObject).then(response => {
-          setPersons(prevPersons => ([...prevPersons, response]))
+       //updates db with new number then loops through the old array 
+         phoneService.update(personFound.id,updatededPersonObject).then((updatedPerson) => {
+            setPersons((prevPersons) =>
+              prevPersons.map((person) =>
+                //if persons id does not match keep same, if it does match replace that persons data with new updated data
+                person.id !== updatedPerson.id ? person : updatedPerson
+              )
+            );
          
-          
-          console.log(response);
-          
          })
        }
       setNewName('')
@@ -57,8 +63,8 @@ const App = () => {
         phoneNumber: newPhoneNumber
         
       }
-      phoneService.create(personObject).then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
+      phoneService.create(personObject).then(response => {
+        setPersons(prevPersons =>([...prevPersons, response]))
         setNewName('')
         setNewPhoneNumber('')
       })
