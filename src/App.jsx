@@ -4,6 +4,7 @@ import Filter from '../components/Filter'
 import AddPersonForm from '../components/addPersonForm'
 import PersonList from '../components/PersonList'
 import phoneService from './services/phonebook'
+import Notification from '../components/Error'
 
 const App = () => {
 
@@ -11,6 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhoneNumber, setNewPhoneNumber] = useState('')
   const [searchParam, setSearchParam] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
 
 
   useEffect(() => {
@@ -44,14 +46,24 @@ const App = () => {
         
        }
        //updates db with new number then loops through the old array 
-         phoneService.update(personFound.id,updatededPersonObject).then((updatedPerson) => {
+         phoneService.update(personFound.id,updatededPersonObject)
+         .then((updatedPerson) => {
             setPersons((prevPersons) =>
               prevPersons.map((person) =>
                 //if persons id does not match keep same, if it does match replace that persons data with new updated data
                 person.id !== updatedPerson.id ? person : updatedPerson
               )
             );
-         
+            setNotificationMessage(`${personFound.name} phone number has been updated`)
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
+         })
+         .catch(error =>{
+          setNotificationMessage(` ${personFound.name} already been deleted ${error}`)
+          setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
          })
        }
       setNewName('')
@@ -65,6 +77,10 @@ const App = () => {
       }
       phoneService.create(personObject).then(response => {
         setPersons(prevPersons =>([...prevPersons, response]))
+        setNotificationMessage(`${newName} has been added`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
         setNewName('')
         setNewPhoneNumber('')
       })
@@ -76,6 +92,10 @@ const App = () => {
     if(window.confirm(`Do you want to Delete ${name}`)) {
       phoneService.remove(id).then(response => {
         setPersons(prevPersons => prevPersons.filter(p => p.id !== id));
+        setNotificationMessage(`${name} has been successfully deleted`)
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
         console.log("deleted successfully", response.data);
         
       })
@@ -99,6 +119,7 @@ const App = () => {
     <>
       <div>
         <h2>Phonebook</h2>
+        <Notification message={notificationMessage}/>
         Search: <Filter search={handleSearch} />
         <AddPersonForm persons={addPersons} newName={newName} fullNameChange={handleNameChange} phoneNumber={newPhoneNumber} phoneNumberChange={handlePhoneNumberChange} />
         <h1>Numbers</h1>
