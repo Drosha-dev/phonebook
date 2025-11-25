@@ -42,7 +42,7 @@ const App = () => {
         const updatededPersonObject = {
         id: personFound.id,
         name: newName,
-        phoneNumber: newPhoneNumber
+        number: newPhoneNumber
         
        }
        //updates db with new number then loops through the old array 
@@ -70,9 +70,8 @@ const App = () => {
       setNewPhoneNumber('')
     } else {
       const personObject = {
-        id: String(persons.length + 1),
         name: newName,
-        phoneNumber: newPhoneNumber
+        number: newPhoneNumber
         
       }
       phoneService.create(personObject).then(response => {

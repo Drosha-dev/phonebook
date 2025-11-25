@@ -1,4 +1,4 @@
-
+import React from "react"
 
 const PersonList = ({ persons, search, handleRemove }) => {
 
@@ -10,8 +10,11 @@ const PersonList = ({ persons, search, handleRemove }) => {
       {
         persons.filter(p => p.name.toLowerCase().includes(search)
           || search == '').map(p =>
-            <><li key={p.id}>{p.name} {p.phoneNumber}</li> 
-              <button onClick={() => handleRemove(p.id, p.name)}>PUSH ME</button></>)
+            <React.Fragment key={p.id}>
+            <><li>{p.name} {p.number}</li> 
+              <button onClick={() => handleRemove(p.id, p.name)}>PUSH ME</button></>
+              </React.Fragment>
+              )
       }
 
     </ul>
