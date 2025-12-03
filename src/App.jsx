@@ -19,35 +19,35 @@ const App = () => {
     phoneService.getAll().then(initialPersons => {
       setPersons(initialPersons)
     })
-  },[])
+  }, [])
 
   // not sure about these feel a bit outdated
   const handleNameChange = (e) => {
     setNewName(e.target.value);
   }
-//see handleNameChange
+  //see handleNameChange
   const handlePhoneNumberChange = (e) => {
     setNewPhoneNumber(e.target.value);
   }
 
   const addPersons = (e) => {
     e.preventDefault();
-    
+
     //finds person with same name
     const personFound = persons.find((e) => e.name == newName);
     // if found and user wants updates with new object through phoneservice update
     if (personFound !== undefined) {
-      if(window.confirm(`${newName} has already been added. Do you want to update users Phone Number?`)){
-        
+      if (window.confirm(`${newName} has already been added. Do you want to update users Phone Number?`)) {
+
         const updatededPersonObject = {
-        id: personFound.id,
-        name: newName,
-        number: newPhoneNumber
-        
-       }
-       //updates db with new number then loops through the old array 
-         phoneService.update(personFound.id,updatededPersonObject)
-         .then((updatedPerson) => {
+          id: personFound.id,
+          name: newName,
+          number: newPhoneNumber
+
+        }
+        //updates db with new number then loops through the old array 
+        phoneService.update(personFound.id, updatededPersonObject)
+          .then((updatedPerson) => {
             setPersons((prevPersons) =>
               prevPersons.map((person) =>
                 //if persons id does not match keep same, if it does match replace that persons data with new updated data
@@ -58,37 +58,44 @@ const App = () => {
             setTimeout(() => {
               setNotificationMessage(null)
             }, 5000)
-         })
-         .catch(error =>{
-          setNotificationMessage(` ${personFound.name} already been deleted ${error}`)
-          setTimeout(() => {
+          })
+          .catch(error => {
+            setNotificationMessage(` ${personFound.name} already been deleted ${error}`)
+            setTimeout(() => {
               setNotificationMessage(null)
             }, 5000)
-         })
-       }
+          })
+      }
       setNewName('')
       setNewPhoneNumber('')
     } else {
       const personObject = {
         name: newName,
         number: newPhoneNumber
-        
-      }
-      phoneService.create(personObject).then(response => {
-        setPersons(prevPersons =>([...prevPersons, response]))
-        setNotificationMessage(`${newName} has been added`)
-        setTimeout(() => {
-          setNotificationMessage(null)
-        }, 5000)
-        setNewName('')
-        setNewPhoneNumber('')
-      })
 
+      }
+      phoneService.create(personObject)
+        .then(response => {
+          setPersons(prevPersons => ([...prevPersons, response]))
+          setNotificationMessage(`${newName} has been added`)
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+          setNewName('')
+          setNewPhoneNumber('')
+        })
+        .catch(error => {
+          // console.log(error.response.data.error);
+          setNotificationMessage(`Error: ${error.response?.data?.error || error.message}`);
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+        })
     }
   }
-  const handleRemove= (id,name) => {
-   
-    if(window.confirm(`Do you want to Delete ${name}`)) {
+  const handleRemove = (id, name) => {
+
+    if (window.confirm(`Do you want to Delete ${name}`)) {
       phoneService.remove(id).then(response => {
         setPersons(prevPersons => prevPersons.filter(p => p.id !== id));
         setNotificationMessage(`${name} has been successfully deleted`)
@@ -96,13 +103,17 @@ const App = () => {
           setNotificationMessage(null)
         }, 5000)
         console.log("deleted successfully", response.data);
-        
+
       })
+        .catch(error => {
+          console.log(error.response.data.error);
+
+        })
     }
-      
+
     // phoneService.remove(e.id).then(response => {
     //   console.log(`deleted ${e.name}`,response.status);
-      
+
     // })
     // .catch(error => {
     //   console.error("error deleting", error);
@@ -118,7 +129,7 @@ const App = () => {
     <>
       <div>
         <h2>Phonebook</h2>
-        <Notification message={notificationMessage}/>
+        <Notification message={notificationMessage} />
         Search: <Filter search={handleSearch} />
         <AddPersonForm persons={addPersons} newName={newName} fullNameChange={handleNameChange} phoneNumber={newPhoneNumber} phoneNumberChange={handlePhoneNumberChange} />
         <h1>Numbers</h1>

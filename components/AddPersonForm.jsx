@@ -7,13 +7,13 @@ const AddPersonForm =({persons, fullNameChange, phoneNumberChange, newName, phon
        <form onSubmit={persons}>
           <h1>Add a new </h1>
           <div>
-            name:
+            name: 
             <input value={newName}
               onChange={fullNameChange}
             />
           </div>
           <div>
-            phonenumber:
+            phonenumber: 
             <input value={phoneNumber}
               onChange={phoneNumberChange}
             />
